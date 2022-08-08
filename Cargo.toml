@@ -9,6 +9,7 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+bytemuck = { version = "1.4", features = [ "derive" ] }
 cfg-if = "1"
 env_logger = "0.9"
 log = "0.4"
