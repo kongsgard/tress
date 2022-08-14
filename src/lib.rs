@@ -20,8 +20,9 @@ pub async fn run() {
     let event_loop = EventLoop::new();
     let title = env!("CARGO_PKG_NAME");
     let window = winit::window::WindowBuilder::new()
-        .with_maximized(true)
         .with_title(title)
+        .with_maximized(true)
+        .with_visible(false)
         .build(&event_loop)
         .unwrap();
 

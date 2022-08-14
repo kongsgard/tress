@@ -13,6 +13,7 @@ use winit::{
 pub async fn run(event_loop: EventLoop<()>, window: Window) {
     let mut state = State::new(&window).await;
     let mut last_render_time = instant::Instant::now();
+    window.set_visible(true);
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Poll;
         match event {
