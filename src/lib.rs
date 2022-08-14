@@ -4,7 +4,8 @@ mod model;
 mod render;
 mod texture;
 
-use winit::event_loop::EventLoop;
+use std::path::Path;
+use winit::{event_loop::EventLoop, window::Icon};
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen(start))]
 pub async fn run() {
@@ -19,8 +20,12 @@ pub async fn run() {
 
     let event_loop = EventLoop::new();
     let title = env!("CARGO_PKG_NAME");
+
+    let icon_path = concat!(env!("CARGO_MANIFEST_DIR"), "/res/icons/icon.png");
+    let icon = load_icon(Path::new(icon_path));
     let window = winit::window::WindowBuilder::new()
         .with_title(title)
+        .with_window_icon(Some(icon))
         .with_maximized(true)
         .with_visible(false)
         .build(&event_loop)
@@ -46,4 +51,16 @@ pub async fn run() {
     }
 
     render::run(event_loop, window).await;
+}
+
+fn load_icon(path: &Path) -> Icon {
+    let (icon_rgba, icon_width, icon_height) = {
+        let image = image::open(path)
+            .expect("Failed to open icon path")
+            .into_rgba8();
+        let (width, height) = image.dimensions();
+        let rgba = image.into_raw();
+        (rgba, width, height)
+    };
+    Icon::from_rgba(icon_rgba, icon_width, icon_height).expect("Failed to open icon")
 }
