@@ -12,8 +12,8 @@ use winit::{
 use wasm_bindgen::prelude::*;
 
 mod camera;
+mod io;
 mod model;
-mod resources;
 mod texture;
 
 use model::{DrawLight, DrawModel, Vertex};
@@ -365,10 +365,9 @@ impl State {
             label: Some("camera_bind_group"),
         });
 
-        let obj_model =
-            resources::load_model("cube.obj", &device, &queue, &texture_bind_group_layout)
-                .await
-                .unwrap();
+        let obj_model = io::load_model("cube.obj", &device, &queue, &texture_bind_group_layout)
+            .await
+            .unwrap();
 
         let light_uniform = LightUniform {
             position: [2.0, 2.0, 2.0],
