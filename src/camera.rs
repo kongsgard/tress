@@ -35,11 +35,13 @@ impl Camera {
     }
 
     pub fn calc_matrix(&self) -> Matrix4<f32> {
-        Matrix4::look_to_rh(
-            self.position,
-            Vector3::new(self.yaw.0.cos(), self.pitch.0.sin(), self.yaw.0.sin()).normalize(),
-            Vector3::unit_y(),
-        )
+        Matrix4::look_to_rh(self.position, self.view_direction(), Vector3::unit_y())
+    }
+
+    pub fn view_direction(&self) -> Vector3<f32> {
+        let (yaw_sin, yaw_cos) = self.yaw.0.sin_cos();
+        let (pitch_sin, pitch_cos) = self.pitch.0.sin_cos();
+        Vector3::new(yaw_cos * pitch_cos, pitch_sin, yaw_sin * pitch_cos).normalize()
     }
 }
 
@@ -155,9 +157,11 @@ impl CameraController {
 
         // Move forward/backward and left/right
         let (yaw_sin, yaw_cos) = camera.yaw.0.sin_cos();
-        let forward = Vector3::new(yaw_cos, 0.0, yaw_sin).normalize();
         let right = Vector3::new(-yaw_sin, 0.0, yaw_cos).normalize();
-        camera.position += forward * (self.amount_forward - self.amount_backward) * self.speed * dt;
+        camera.position += camera.view_direction()
+            * (self.amount_forward - self.amount_backward)
+            * self.speed
+            * dt;
         camera.position += right * (self.amount_right - self.amount_left) * self.speed * dt;
 
         // Move in/out (aka. "zoom")
