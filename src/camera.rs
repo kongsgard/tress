@@ -101,12 +101,19 @@ impl CameraController {
         }
     }
 
-    pub fn process_keyboard(&mut self, key: VirtualKeyCode, state: ElementState) -> bool {
-        let amount = if state == ElementState::Pressed {
-            1.0
-        } else {
-            0.0
+    pub fn process_keyboard(
+        &mut self,
+        key: VirtualKeyCode,
+        state: ElementState,
+        modifiers: ModifiersState,
+    ) -> bool {
+        let amount = match (state, modifiers) {
+            (ElementState::Pressed, ModifiersState::SHIFT) => 10.0,
+            (ElementState::Pressed, ModifiersState::ALT) => 0.1,
+            (ElementState::Pressed, _) => 1.0,
+            _ => 0.0,
         };
+
         match key {
             VirtualKeyCode::W | VirtualKeyCode::Up => {
                 self.amount_forward = amount;
@@ -124,11 +131,11 @@ impl CameraController {
                 self.amount_right = amount;
                 true
             }
-            VirtualKeyCode::Space => {
+            VirtualKeyCode::E => {
                 self.amount_up = amount;
                 true
             }
-            VirtualKeyCode::LShift => {
+            VirtualKeyCode::Q => {
                 self.amount_down = amount;
                 true
             }

@@ -17,11 +17,12 @@ env_logger = "0.9"
 instant = "0.1"
 log = "0.4"
 pollster = "0.2"
+rfd = "0.10.0"
 tobj = { version = "3.2.1", features = [
     "async",
 ]}
 wgpu = "0.13"
-winit = "0.26"
+winit = "0.27"
 
 [dependencies.image]
 version = "0.24"

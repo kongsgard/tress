@@ -138,6 +138,7 @@ pub struct State {
     light_bind_group: wgpu::BindGroup,
     light_render_pipeline: wgpu::RenderPipeline,
     pub(super) mouse_pressed: bool,
+    pub(super) modifiers_pressed: ModifiersState,
 }
 
 fn create_render_pipeline(
@@ -441,6 +442,7 @@ impl State {
             light_bind_group,
             light_render_pipeline,
             mouse_pressed: false,
+            modifiers_pressed: ModifiersState::default(),
         }
     }
 
@@ -463,6 +465,10 @@ impl State {
 
     pub fn input(&mut self, event: &WindowEvent) -> bool {
         match event {
+            WindowEvent::ModifiersChanged(m) => {
+                self.modifiers_pressed = *m;
+                true
+            }
             WindowEvent::KeyboardInput {
                 input:
                     KeyboardInput {
@@ -471,7 +477,11 @@ impl State {
                         ..
                     },
                 ..
-            } => self.camera_controller.process_keyboard(*key, *state),
+            } => match key {
+                _ => self
+                    .camera_controller
+                    .process_keyboard(*key, *state, self.modifiers_pressed),
+            },
             WindowEvent::MouseWheel { delta, .. } => {
                 self.camera_controller.process_scroll(delta);
                 true
