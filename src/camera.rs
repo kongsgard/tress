@@ -106,7 +106,7 @@ impl CameraController {
         key: VirtualKeyCode,
         state: ElementState,
         modifiers: ModifiersState,
-    ) -> bool {
+    ) {
         let amount = match (state, modifiers) {
             (ElementState::Pressed, ModifiersState::SHIFT) => 10.0,
             (ElementState::Pressed, ModifiersState::ALT) => 0.1,
@@ -117,29 +117,23 @@ impl CameraController {
         match key {
             VirtualKeyCode::W | VirtualKeyCode::Up => {
                 self.amount_forward = amount;
-                true
             }
             VirtualKeyCode::S | VirtualKeyCode::Down => {
                 self.amount_backward = amount;
-                true
             }
             VirtualKeyCode::A | VirtualKeyCode::Left => {
                 self.amount_left = amount;
-                true
             }
             VirtualKeyCode::D | VirtualKeyCode::Right => {
                 self.amount_right = amount;
-                true
             }
             VirtualKeyCode::E => {
                 self.amount_up = amount;
-                true
             }
             VirtualKeyCode::Q => {
                 self.amount_down = amount;
-                true
             }
-            _ => false,
+            _ => (),
         }
     }
 
