@@ -9,13 +9,18 @@ pub use wgpu_init::*;
 use winit::{
     event::*,
     event_loop::{ControlFlow, EventLoop},
-    window::Window,
+    window::{CursorGrabMode, Window},
 };
 
 pub async fn run(event_loop: EventLoop<()>, window: Window) {
     let mut state = State::new(&window).await;
     let mut last_render_time = instant::Instant::now();
     window.set_visible(true);
+    window.set_cursor_visible(false);
+    window
+        .set_cursor_grab(CursorGrabMode::Confined)
+        .or_else(|_e| window.set_cursor_grab(CursorGrabMode::Locked))
+        .unwrap();
 
     let mut mouse_pressed: bool = false;
     let mut modifiers_pressed: ModifiersState = ModifiersState::default();
